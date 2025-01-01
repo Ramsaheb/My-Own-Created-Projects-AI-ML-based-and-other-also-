@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6d5b97, #8d58bf);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+
+        .wrapper {
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 32px;
+            color: #333;
+            font-weight: bold;
+            font-size: 28px;
+        }
+
+        .input-box {
+            margin-bottom: 24px;
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            color: #333;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-box input:focus {
+            border-color: #6d5b97;
+            outline: none;
+            box-shadow: 0 0 8px rgba(109, 91, 151, 0.2);
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .remember-forgot label {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .remember-forgot input {
+            margin-right: 8px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: #6d5b97;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #8d58bf;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .register-link a {
+            color: #6d5b97;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .register-link a:hover {
+            color: #8d58bf;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <form action="{{ url_for('login_admin') }}" method="post">
+            <!-- Add CSRF token for security -->
+            {{ form.hidden_tag() }}
+            
+            <h1>Admin Login</h1>
+            <div class="input-box">
+                {{ form.username.label(class="form-label") }}
+                {{ form.username(class="form-control", placeholder="Username") }}
+            </div>
+            <div class="input-box">
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-control", placeholder="Password") }}
+            </div>
+            <div class="remember-forgot">
+                <label>
+                    {{ form.remember() }} Remember me
+                </label>
+            </div>
+            <button type="submit" class="btn">Login</button>
+
+            <div class="register-link">
+                <p>Don't have an account? <a href="{{ url_for('register_admin') }}">Register</a></p>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

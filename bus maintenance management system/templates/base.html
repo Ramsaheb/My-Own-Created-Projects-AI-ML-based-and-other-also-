@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample Page</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            color: #f4f4f4; /* Light color for text */
+            background: url('https://thumbs.dreamstime.com/b/buses-workshops-depot-hostivar-prague-21554714.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .navbar, .footer {
+            background-color: #004d40; /* Dark teal background */
+            color: #f4f4f4; /* Light text color for contrast */
+            padding: 15px;
+            text-align: center;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between; /* Distribute space between items */
+            align-items: center; /* Center items vertically */
+        }
+        .navbar .left-links {
+            display: flex;
+            align-items: center;
+        }
+        .navbar .right-links {
+            display: flex;
+            align-items: center;
+        }
+        .navbar a {
+            color: #f4f4f4; /* Light text color for contrast */
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 18px;
+        }
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: calc(100vh - 100px); /* Adjusting for navbar and footer height */
+        }
+        .button-container {
+            margin: 20px 0;
+        }
+        .button {
+            background-color: #009688; /* Teal background */
+            color: #fff; /* White text for contrast */
+            border: none;
+            padding: 20px 40px; /* Increased padding for larger button */
+            font-size: 24px; /* Increased font size */
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        .button:hover {
+            background-color: #00796b; /* Darker teal for hover effect */
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>    
+</head>
+<body>
+    <div class="navbar">
+        <div class="left-links">
+            <a href="{{ url_for('index') }}">Home</a>
+        </div>
+        <div class="right-links">
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="button-container">
+            <button class="button" onclick="window.location.href='{{ url_for('register_admin') }}'">Admin</button>
+            <button class="button" onclick="window.location.href='{{ url_for('register_driver') }}'">Driver</button>
+        </div>
+    </div>
+    <div class="footer">
+        &copy; 2024 Your Company. All rights reserved.
+    </div>
+</body>
+</html>

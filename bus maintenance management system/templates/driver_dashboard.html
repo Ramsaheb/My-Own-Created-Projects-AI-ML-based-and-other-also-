@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Driver Dashboard</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f0f0f0;
+        margin: 0;
+        overflow-x: hidden;
+      }
+
+      .header {
+        background: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        text-align: center;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        height: 60px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-sizing: border-box; /* Ensure padding does not affect the overall width */
+      }
+
+      .header .menu-btn {
+        font-size: 20px;
+        cursor: pointer;
+      }
+
+      .header .logout-btn {
+        background: yellow;
+        color: black;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 25px; /* Oval shape */
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 16px; /* Medium size */
+        display: inline-block;
+        text-align: center;
+        box-sizing: border-box; /* Ensure padding does not affect the overall width */
+      }
+
+      .header .logout-btn:hover {
+        background: #f1c40f; /* Slightly darker yellow on hover */
+      }
+
+      .sidebar {
+        background: #333;
+        color: #fff;
+        height: calc(100vh - 60px);
+        width: 250px;
+        position: fixed;
+        top: 60px;
+        left: -250px;
+        padding-top: 20px;
+        transition: left 0.3s;
+        z-index: 999;
+        overflow-y: auto;
+      }
+
+      .sidebar a {
+        padding: 15px 20px;
+        text-decoration: none;
+        font-size: 16px;
+        color: #fff;
+        display: block;
+      }
+
+      .sidebar a:hover {
+        background: #575757;
+      }
+
+      .main-content {
+        margin-top: 60px;
+        padding: 20px;
+        transition: margin-left 0.3s;
+      }
+
+      .main-content.active {
+        margin-left: 250px;
+      }
+
+      .sidebar.active {
+        left: 0;
+      }
+
+      .card {
+        background: #fff;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .card h2 {
+        margin-top: 0;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+
+      table,
+      th,
+      td {
+        border: 1px solid #ddd;
+      }
+
+      th,
+      td {
+        padding: 10px;
+        text-align: left;
+      }
+
+      th {
+        background: #f4f4f4;
+      }
+
+      .btn-view {
+        background: #007bff;
+        color: #fff;
+        padding: 5px 10px;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+
+      .btn-view:hover {
+        background: #0056b3;
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 100%;
+          left: -100%;
+        }
+
+        .sidebar.active {
+          left: 0;
+        }
+
+        .main-content {
+          margin-left: 0;
+        }
+      }
+
+      /* General Styling */
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f9;
+      }
+
+      h1,
+      h2,
+      h3 {
+        color: #333;
+      }
+
+      .card {
+        padding: 20px;
+        margin: 20px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Styling for Bus Token Section */
+      #token {
+        background-color: #e9f5f9;
+        border-radius: 8px;
+        padding: 20px;
+      }
+
+      .token {
+        font-size: 18px;
+        margin-bottom: 15px;
+      }
+
+      #currentToken {
+        font-weight: bold;
+        color: #2d8fdd;
+      }
+
+      /* Queue Section Styling */
+      .queue-section {
+        margin-top: 20px;
+      }
+
+      .queue-section h3 {
+        color: #555;
+        margin-bottom: 10px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+
+      table th,
+      table td {
+        text-align: left;
+        padding: 12px;
+        border-bottom: 1px solid #ddd;
+      }
+
+      table th {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      table tr:hover {
+        background-color: #f1f1f1;
+      }
+
+      .complete-btn {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      .complete-btn:hover {
+        background-color: #218838;
+      }
+
+      /* Add Bus Section Styling */
+      .add-bus {
+        margin-top: 30px;
+      }
+
+      .add-bus h3 {
+        margin-bottom: 15px;
+      }
+
+      .add-bus label {
+        display: block;
+        margin: 10px 0 5px;
+        font-weight: bold;
+      }
+
+      .add-bus input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-size: 16px;
+      }
+
+      .add-bus button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      .add-bus button:hover {
+        background-color: #0056b3;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        table {
+          font-size: 14px;
+        }
+
+        .complete-btn {
+          padding: 5px 10px;
+        }
+
+        .add-bus input[type="text"],
+        .add-bus button {
+          font-size: 14px;
+          padding: 8px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <span
+        class="menu-btn"
+        onclick="toggleSidebar()"
+        aria-label="Toggle Sidebar"
+        >☰</span
+      >
+      <h1>Driver Dashboard</h1>
+      <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+    </div>
+
+    <div class="sidebar" id="sidebar">
+      <a href="javascript:void(0);" onclick="showSection('profile')">Profile</a>
+      <a href="javascript:void(0);" onclick="showSection('token')">Bus Token</a>
+    </div>
+
+    <div class="main-content" id="main-content">
+      <!-- Profile Section -->
+      <div id="profile" class="card section">
+        <h2>Profile Information</h2>
+        <p>Name: John Doe</p> <!-- These values will be updated dynamically by JavaScript -->
+        <p>Driver ID: 12345</p>
+        <p>Contact: 9876543210</p>
+    
+        <h3>Assigned Buses</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Bus ID</th>
+                    <th>Route</th>
+                    <th>Status</th>
+                    <th>Last Inspection</th>
+                    <th>Maintenance Updates</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>1</td>
+              <td>Route A</td>
+              <td>Operational</td>
+              <td>Sept 18, 2024</td>
+              <td>
+                <button class="btn-view" onclick="viewMaintenance(1)">
+                  View
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Route B</td>
+              <td>Operational</td>
+              <td>Sept 19, 2024</td>
+              <td>
+                <button class="btn-view" onclick="viewMaintenance(2)">
+                  View
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Route C</td>
+              <td>Operational</td>
+              <td>Sept 20, 2024</td>
+              <td>
+                <button class="btn-view" onclick="viewMaintenance(3)">
+                  View
+                </button>
+              </td>
+            </tr>
+            <!-- <tr>
+              <td>4</td>
+              <td>Route D</td>
+              <td>In Maintenance</td>
+              <td>Sept 21, 2024</td>
+              <td>
+                <button class="btn-view" onclick="viewMaintenance(1)">
+                  View
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>Route E</td>
+              <td>Operational</td>
+              <td>Sept 22, 2024</td>
+              <td>
+                <button class="btn-view" onclick="viewMaintenance(1)">
+                  View
+                </button>
+              </td>
+            </tr> -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Maintenance Updates Section -->
+      <div id="maintenance-updates" class="card section" style="display: none">
+        <h2>Maintenance Updates for Bus <span id="bus-id"></span></h2>
+        <ul id="updates-list"></ul>
+        <button onclick="goBack()">Back</button>
+      </div>
+
+      <div id="token" class="card section">
+        <h2>Bus Token</h2>
+        <!-- <div class="token">
+            <h3>Current Bus Token: <span id="currentToken">None</span></h3>
+        </div> -->
+    
+        <div class="queue-section">
+            <h3>Bus Maintenance Queue</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Bus Number</th>
+                        <th>Maintenance Issue</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="busQueue">
+                    <!-- Queue items will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
+    
+        <div class="add-bus">
+            <h3>Add Bus to Queue</h3>
+            <label for="busNumber">Bus Number:</label>
+            <input type="text" id="busNumber" placeholder="Enter bus number" required />
+            <br />
+            <label for="issue">Maintenance Issue:</label>
+            <input type="text" id="issue" placeholder="Enter issue" />
+            <br />
+            <button onclick="addBusToQueue()">Add Bus</button>
+        </div>
+    </div>
+    
+      </div>
+    </div>
+
+    <script>
+      function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("active");
+        document.getElementById("main-content").classList.toggle("active");
+      }
+
+      function showSection(sectionId) {
+    const sections = document.querySelectorAll(".section");
+    sections.forEach((section) => (section.style.display = "none"));
+
+    // Show the selected section
+    document.getElementById(sectionId).style.display = "block";
+
+    // If the profile section is selected, fetch the profile data
+    if (sectionId === "profile") {
+        fetch("/api/profile")
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                document.querySelector("#profile h2").textContent = "Profile Information";
+                document.querySelector("#profile p:nth-child(2)").textContent = `Name: ${data.name}`;
+                document.querySelector("#profile p:nth-child(3)").textContent = `Driver ID: ${data.driver_id}`;
+                document.querySelector("#profile p:nth-child(4)").textContent = `Contact: ${data.contact}`;
+
+                const tbody = document.querySelector("#profile tbody");
+                tbody.innerHTML = ""; // Clear existing rows
+
+                data.assigned_buses.forEach((bus) => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${bus.bus_id}</td>
+                        <td>${bus.route}</td>
+                        <td>${bus.status}</td>
+                        <td>${bus.last_inspection}</td>
+                        <td><button class="btn-view" onclick="viewMaintenance(${bus.bus_id})">View</button></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            })
+            .catch((error) => {
+                console.error("Error fetching profile data:", error);
+            });
+    }
+}
+      function viewMaintenance(busId) {
+        document.getElementById("bus-id").textContent = busId;
+        const updatesList = document.getElementById("updates-list");
+        updatesList.innerHTML = ""; // Clear previous updates
+
+        fetch(`/maintenance/${busId}`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (data.length === 0) {
+              const li = document.createElement("li");
+              li.textContent = "No maintenance updates found.";
+              updatesList.appendChild(li);
+            } else {
+              data.forEach((update) => {
+                const li = document.createElement("li");
+                li.innerHTML = `
+                                <strong>Date:</strong> ${update.date}<br>
+                                <strong>Tires:</strong> ${update.tires}<br>
+                                <strong>Brakes:</strong> ${update.brakes}<br>
+                                <strong>Oil:</strong> ${update.oil}<br>
+                                <strong>Engine:</strong> ${update.engine}<br>
+                                <strong>Lights:</strong> ${update.lights}<br>
+                                <strong>Comments:</strong> ${update.comments}<br>
+                                <hr>
+                            `;
+                updatesList.appendChild(li);
+              });
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching maintenance updates:", error);
+            const li = document.createElement("li");
+            li.textContent = "Error fetching maintenance updates.";
+            updatesList.appendChild(li);
+          });
+
+        showSection("maintenance-updates"); // Show the maintenance updates section
+      }
+
+      function goBack() {
+        showSection("profile"); // Go back to profile section
+      }
+
+      // Show the profile section by default
+      showSection("profile");
+
+      // Queue logic
+      let busQueue = [];
+
+      // Function to add a bus to the queue
+      function addBusToQueue() {
+        const busNumber = document.getElementById("busNumber").value;
+        const issue = document.getElementById("issue").value;
+
+        if (busNumber && issue) {
+          const newBus = { id: Date.now(), busNumber, issue };
+          busQueue.push(newBus);
+
+          updateQueue();
+          syncWithAdminDashboard();
+        }
+      }
+
+      // Function to update the driver dashboard queue display
+      function updateQueue() {
+        const busQueueTable = document.getElementById("busQueue");
+        busQueueTable.innerHTML = "";
+
+        busQueue.forEach((bus) => {
+          const row = `<tr>
+            <td>${bus.busNumber}</td>
+            <td>${bus.issue}</td>
+            <td><button onclick="completeBus(${bus.id})">Complete</button></td>
+        </tr>`;
+          busQueueTable.innerHTML += row;
+        });
+      }
+
+      // Function to complete a bus query and remove it
+      function completeBus(busId) {
+        busQueue = busQueue.filter((bus) => bus.id !== busId);
+
+        updateQueue();
+        syncWithAdminDashboard();
+      }
+
+      // Function to sync data with the admin dashboard
+      function syncWithAdminDashboard() {
+        localStorage.setItem("busQueue", JSON.stringify(busQueue)); // Store updated queue
+      }
+
+      // Load queue from localStorage when the page is loaded
+      window.onload = function () {
+    const storedQueue = localStorage.getItem("busQueue");
+    if (storedQueue) {
+        busQueue = JSON.parse(storedQueue);
+        updateQueue();
+    }
+};
+    </script>
+  </body>
+</html>

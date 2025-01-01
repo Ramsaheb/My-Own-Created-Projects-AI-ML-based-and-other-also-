@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f0f0f0;
+        margin: 0;
+        overflow-x: hidden;
+
+        font-family: Arial, sans-serif;
+        background-image: url("images/pic1.jpg"); /* Add your background image URL here */
+        background-size: cover;
+        color: #333;
+        margin: 0;
+        padding: 0;
+      }
+
+      .header {
+        background: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        text-align: center;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        height: 60px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-sizing: border-box;
+      }
+
+      .header .menu-btn {
+        font-size: 20px;
+        cursor: pointer;
+      }
+
+      .header .logout-btn {
+        background: yellow;
+        color: black;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 16px;
+        display: inline-block;
+        text-align: center;
+        box-sizing: border-box;
+      }
+
+      .header .logout-btn:hover {
+        background: #f1c40f;
+      }
+
+      .sidebar {
+        background: #333;
+        color: #fff;
+        height: calc(100vh - 60px);
+        width: 250px;
+        position: fixed;
+        top: 60px;
+        left: -250px;
+        padding-top: 20px;
+        transition: left 0.3s;
+        z-index: 999;
+        overflow-y: auto;
+      }
+
+      .sidebar a {
+        padding: 15px 20px;
+        text-decoration: none;
+        font-size: 16px;
+        color: #fff;
+        display: block;
+      }
+
+      .sidebar a:hover {
+        background: #575757;
+      }
+
+      .main-content {
+        margin-top: 60px;
+        padding: 20px;
+        transition: margin-left 0.3s;
+      }
+
+      .main-content.active {
+        margin-left: 250px;
+      }
+
+      .sidebar.active {
+        left: 0;
+      }
+
+      .card {
+        background: #fff;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .card h2 {
+        margin-top: 0;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+
+      table,
+      th,
+      td {
+        border: 1px solid #ddd;
+      }
+
+      th,
+      td {
+        padding: 10px;
+        text-align: left;
+      }
+
+      th {
+        background: #f4f4f4;
+      }
+
+      .btn-view,
+      .btn-edit {
+        background: #007bff;
+        color: #fff;
+        padding: 5px 10px;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+
+      .btn-view:hover {
+        background: #0056b3;
+      }
+
+      .btn-edit {
+        background: #28a745;
+      }
+
+      .btn-edit:hover {
+        background: #218838;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+      }
+
+      .form-group button {
+        background: #007bff;
+        color: #fff;
+        padding: 10px;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+
+      .form-group button:hover {
+        background: #0056b3;
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 100%;
+          left: -100%;
+          top: 0;
+        }
+
+        .sidebar.active {
+          left: 0;
+        }
+
+        .main-content {
+          margin-left: 0;
+        }
+      }
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.6);
+      }
+      .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 90%;
+        max-width: 600px; /* Restrict the max width of the modal */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        border-radius: 5px; /* Add rounded corners */
+      }
+      .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+      .close:hover,
+      .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      /* Table styling */
+      th,
+      td {
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2; /* Light grey background for header */
+      }
+      tr:hover {
+        background-color: #f1f1f1; /* Light grey background on hover */
+      }
+      .submit-button {
+        background-color: #007bff; /* Bootstrap primary color */
+        color: white;
+        border: none;
+        padding: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+      }
+
+      .submit-button:hover {
+        background-color: #0056b3; /* Darker shade for hover effect */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <span
+        class="menu-btn"
+        onclick="toggleSidebar()"
+        aria-label="Toggle Sidebar"
+        >☰</span
+      >
+      <h1>Admin Dashboard</h1>
+      <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+    </div>
+
+    <div class="sidebar" id="sidebar">
+      <a
+        href="javascript:void(0);"
+        onclick="showSection('manage-buses')"
+        aria-label="Manage Buses"
+        >Manage Buses</a
+      >
+      <a
+        href="javascript:void(0);"
+        onclick="showSection('maintenance')"
+        aria-label="Maintenance Records"
+        >Maintenance Records</a
+      >
+      <a
+        href="javascript:void(0);"
+        onclick="showSection('inspections')"
+        aria-label="Inspections"
+        >Inspections</a
+      >
+      <!-- <a href="{{ url_for('checkup') }}">Checkup</a> -->
+      <a href="{{ url_for('analysis') }}">Analytics</a>
+      <li>
+        <a href="#searchInspections" onclick="showSection('searchInspections')"
+          >Search Inspections</a
+        >
+      </li>
+    </div>
+
+    <div class="main-content" id="main-content">
+      <!-- Manage Buses Section -->
+      <div id="manage-buses" class="card section">
+        <h2>Manage Buses</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Bus ID</th>
+              <th>Route</th>
+              <th>Status</th>
+              <th>Last Inspection</th>
+              <th>Maintenance Updates</th>
+              <th>Maintenance Record</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Route A</td>
+              <td>Operational</td>
+              <td>Sept 18, 2024</td>
+              <td>
+                <a href="{{ url_for('maintenance_team') }}" class="btn-view"
+                  >Add maintenance update</a
+                >
+              </td>
+              <td>
+                <button class="btn-view" onclick="viewMaintenance(1)">
+                  View
+                </button>
+                <a
+                  href="{{ url_for('edit_maintenance', update_id=1) }}"
+                  class="btn-edit"
+                  >Edit</a
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Route B</td>
+              <td>Operational</td>
+              <td>Sept 19, 2024</td>
+              <td>
+                <a href="{{ url_for('maintenance_team') }}" class="btn-view"
+                  >Add maintenance update</a
+                >
+              </td>
+              <td>
+                <button class="btn-view" onclick="viewMaintenance(2)">
+                  View
+                </button>
+                <a
+                  href="{{ url_for('edit_maintenance', update_id=2) }}"
+                  class="btn-edit"
+                  >Edit</a
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Route C</td>
+              <td>Operational</td>
+              <td>Sept 20, 2024</td>
+              <td>
+                <a href="{{ url_for('maintenance_team') }}" class="btn-view"
+                  >Add maintenance update</a
+                >
+              </td>
+              <td>
+                <button class="btn-view" onclick="viewMaintenance(3)">
+                  View
+                </button>
+                <a
+                  href="{{ url_for('edit_maintenance', update_id=3) }}"
+                  class="btn-edit"
+                  >Edit</a
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>Route D</td>
+              <td>In Maintenance</td>
+              <td>Sept 21, 2024</td>
+              <td>
+                <a href="{{ url_for('maintenance_team') }}" class="btn-view"
+                  >Add maintenance update</a
+                >
+              </td>
+              <td>
+                <button class="btn-view" onclick="viewMaintenance(4)">
+                  View
+                </button>
+                <a
+                  href="{{ url_for('edit_maintenance', update_id=4) }}"
+                  class="btn-edit"
+                  >Edit</a
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>Route E</td>
+              <td>Operational</td>
+              <td>Sept 22, 2024</td>
+              <td>
+                <a href="{{ url_for('maintenance_team') }}" class="btn-view"
+                  >Add maintenance update</a
+                >
+              </td>
+              <td>
+                <button class="btn-view" onclick="viewMaintenance(5)">
+                  View
+                </button>
+                <a
+                  href="{{ url_for('edit_maintenance', update_id=5) }}"
+                  class="btn-edit"
+                  >Edit</a
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Driver Queries Section (moved below Manage Buses) -->
+        <h2>Driver Queries</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Query ID</th>
+              <th>Bus ID</th>
+              <th>Driver Name</th>
+              <th>Issue</th>
+            </tr>
+          </thead>
+          <tbody id="driver-queries-body">
+            <!-- Queries will be dynamically inserted here -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Inspections Section -->
+      <div id="inspections" class="card section" style="padding: 20px">
+        <h2>Inspections</h2>
+        <form
+          id="inspectionForm"
+          class="form-group"
+          style="margin-bottom: 20px"
+        >
+          <input
+            type="text"
+            id="inspectionBusId"
+            placeholder="Bus ID"
+            required
+            style="width: 100%; margin-bottom: 10px"
+          />
+          <input
+            type="date"
+            id="inspectionDate"
+            placeholder="Inspection Date"
+            required
+            style="width: 100%; margin-bottom: 10px"
+          />
+          <input
+            type="text"
+            id="inspectorName"
+            placeholder="Inspector Name"
+            required
+            style="width: 100%; margin-bottom: 10px"
+          />
+          <select
+            id="inspectionType"
+            required
+            style="width: 100%; margin-bottom: 10px"
+          >
+            <option value="">Select Inspection Type</option>
+            <option value="safety">Safety</option>
+            <option value="emissions">Emissions</option>
+            <option value="performance">Performance</option>
+          </select>
+          <textarea
+            id="inspectionNotes"
+            placeholder="Inspection Notes"
+            rows="4"
+            required
+            style="width: 100%; margin-bottom: 10px"
+          ></textarea>
+          <input
+            type="text"
+            id="nextInspectionDue"
+            placeholder="Next Inspection Due (optional)"
+            style="width: 100%; margin-bottom: 10px"
+          />
+          <button type="submit" class="submit-button" style="width: 100%">
+            Submit Inspection
+          </button>
+        </form>
+
+        <h3>Previous Inspections</h3>
+        <table id="inspectionTable" style="border-collapse: collapse">
+          <thead>
+            <tr>
+              <th>Bus ID</th>
+              <th>Inspection Date</th>
+              <th>Inspector Name</th>
+              <th>Inspection Type</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Inspection records will be dynamically added here -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Maintenance Records Section -->
+      <div id="maintenance" class="card section" style="padding: 20px">
+        <h2>Maintenance Records</h2>
+        <table id="maintenanceTable" style="border-collapse: collapse">
+          <thead>
+            <tr>
+              <th>Bus ID</th>
+              <th>Maintenance Type</th>
+              <th>Date</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Maintenance records will be dynamically added here -->
+          </tbody>
+        </table>
+
+        <h3>Add New Maintenance Record</h3>
+        <form id="maintenanceForm" class="form-group">
+          <input
+            type="text"
+            id="maintenanceBusId"
+            placeholder="Bus ID"
+            required
+            style="width: 100%; margin-bottom: 10px"
+          />
+          <select
+            id="maintenanceType"
+            required
+            style="width: 100%; margin-bottom: 10px"
+          >
+            <option value="">Select Maintenance Type</option>
+            <option value="daily">Daily</option>
+            <option value="monthly">Monthly</option>
+            <option value="yearly">Quarterly</option>
+            <option value="emergency">Yearly</option>
+          </select>
+          <input
+            type="date"
+            id="maintenanceDate"
+            required
+            style="width: 100%; margin-bottom: 10px"
+          />
+          <textarea
+            id="maintenanceNotes"
+            placeholder="Maintenance Notes"
+            rows="4"
+            required
+            style="width: 100%; margin-bottom: 10px"
+          ></textarea>
+          <button type="submit" class="submit-button" style="width: 100%">
+            Add Maintenance Record
+          </button>
+        </form>
+      </div>
+
+      <!-- Search Inspections Section -->
+      <div
+        id="searchInspections"
+        class="card section"
+        style="display: none; padding: 20px"
+      >
+        <h2>Search Inspections</h2>
+        <form
+          id="searchInspectionForm"
+          class="form-group"
+          style="margin-bottom: 20px"
+        >
+          <input
+            type="text"
+            id="searchBusId"
+            placeholder="Bus ID"
+            style="width: 100%; margin-bottom: 10px"
+          />
+          <input
+            type="date"
+            id="searchDate"
+            placeholder="Inspection Date (optional)"
+            style="width: 100%; margin-bottom: 10px"
+          />
+          <button type="submit" style="width: 100%">Search</button>
+        </form>
+
+        <h3>Search Results</h3>
+        <table
+          id="searchResultsTable"
+          style="width: 100%; border-collapse: collapse"
+        >
+          <thead>
+            <tr>
+              <th style="border: 1px solid #ddd; padding: 8px">Bus ID</th>
+              <th style="border: 1px solid #ddd; padding: 8px">
+                Inspection Date
+              </th>
+              <th style="border: 1px solid #ddd; padding: 8px">
+                Inspector Name
+              </th>
+              <th style="border: 1px solid #ddd; padding: 8px">
+                Inspection Type
+              </th>
+              <th style="border: 1px solid #ddd; padding: 8px">Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Search results will be dynamically added here -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Maintenance Updates Section -->
+      <div id="maintenance-updates" class="card section" style="display: none">
+        <h2>Maintenance Updates for Bus <span id="bus-id"></span></h2>
+        <ul id="updates-list"></ul>
+        <button class="btn-view" onclick="goBack()">Back</button>
+        <!-- Updated Back button -->
+      </div>
+    </div>
+    <script>
+      function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("active");
+        document.getElementById("main-content").classList.toggle("active");
+      }
+
+      function showSection(sectionId) {
+        const sections = document.querySelectorAll(".section");
+        sections.forEach((section) => (section.style.display = "none"));
+        document.getElementById(sectionId).style.display = "block";
+      }
+
+      function viewMaintenance(busId) {
+        document.getElementById("bus-id").textContent = busId;
+        const updatesList = document.getElementById("updates-list");
+        updatesList.innerHTML = ""; // Clear previous updates
+
+        fetch(`/maintenance/${busId}`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (data.length === 0) {
+              const li = document.createElement("li");
+              li.textContent = "No maintenance updates found.";
+              updatesList.appendChild(li);
+            } else {
+              data.forEach((update) => {
+                const li = document.createElement("li");
+                li.innerHTML = `
+                              <strong>Date:</strong> ${update.date}<br>
+                              <strong>Tires:</strong> ${update.tires}<br>
+                              <strong>Brakes:</strong> ${update.brakes}<br>
+                              <strong>Oil:</strong> ${update.oil}<br>
+                              <strong>Engine:</strong> ${update.engine}<br>
+                              <strong>Lights:</strong> ${update.lights}<br>
+                              <strong>Engine Performance:</strong> ${update.engine_performance}<br>
+                              <strong>Transmission Fluid:</strong> ${update.transmission_fluid}<br>
+                              <strong>Battery Charger:</strong> ${update.battery_charger}<br>
+                              <strong>Brake Pads:</strong> ${update.brake_pads}<br>
+                              <strong>Comments:</strong> ${update.comments}<br>
+                              <hr>
+                          `;
+                updatesList.appendChild(li);
+
+                // Token generation logic after maintenance is complete
+                if (update.is_complete) {
+                  // Assuming 'is_complete' is a field indicating maintenance completion
+                  const token = generateToken(busId);
+                  const tokenLi = document.createElement("li");
+                  tokenLi.innerHTML = `<strong>Maintenance Token:</strong> ${token}<br>`;
+                  updatesList.appendChild(tokenLi);
+                }
+              });
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching maintenance updates:", error);
+            const li = document.createElement("li");
+            li.textContent = "Error fetching maintenance updates.";
+            updatesList.appendChild(li);
+          });
+
+        showSection("maintenance-updates"); // Show the maintenance updates section
+      }
+
+      function goBack() {
+        showSection("manage-buses"); // Go back to manage buses section
+      }
+
+      function generateToken(busId) {
+        // Token generation logic (could be as simple as generating a unique string for the bus)
+        const token = `${busId}-${Math.random().toString(36).substr(2, 9)}`;
+        return token;
+      }
+
+      function checkMaintenanceStatus() {
+        const token = document.getElementById("token-input").value;
+        fetch(`/check_status/${token}`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            const statusDiv = document.getElementById("maintenance-status");
+            if (data.is_complete) {
+              statusDiv.textContent = `Maintenance completed for Bus ID: ${data.bus_id}`;
+            } else {
+              statusDiv.textContent = `Maintenance ongoing for Bus ID: ${data.bus_id}`;
+            }
+          })
+          .catch((error) => {
+            console.error("Error checking maintenance status:", error);
+            document.getElementById("maintenance-status").textContent =
+              "Error checking status.";
+          });
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        loadDriverQueries();
+        loadRecords(); // Load existing records when the page loads
+        showSection("manage-buses"); // Show manage buses section by default
+      });
+
+      // Function to load driver queries in the admin dashboard
+      function loadDriverQueries() {
+        const driverQueriesBody = document.getElementById(
+          "driver-queries-body"
+        );
+        driverQueriesBody.innerHTML = "";
+
+        const busQueue = JSON.parse(localStorage.getItem("busQueue") || "[]");
+
+        busQueue.forEach((bus) => {
+          const row = `<tr>
+            <td>${bus.id}</td>
+            <td>${bus.busNumber}</td>
+            <td>Driver Name</td> <!-- Placeholder for driver name -->
+            <td>${bus.issue}</td>
+        </tr>`;
+          driverQueriesBody.innerHTML += row;
+        });
+      }
+
+      // Load driver queries on page load
+      window.onload = loadDriverQueries;
+
+      // Function to load existing records from localStorage
+      function loadRecords() {
+        const inspections =
+          JSON.parse(localStorage.getItem("inspections")) || [];
+        const maintenance =
+          JSON.parse(localStorage.getItem("maintenance")) || [];
+
+        // Populate inspections table
+        const inspectionTable = document
+          .getElementById("inspectionTable")
+          .querySelector("tbody");
+        inspectionTable.innerHTML = ""; // Clear previous records
+        inspections.forEach((inspection, index) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${inspection.busId}</td>
+            <td>${inspection.date}</td>
+            <td>${inspection.inspector}</td>
+            <td>${inspection.type}</td>
+            <td>${inspection.notes}</td>
+            <td><button onclick="deleteRecord('inspection', ${index})">Delete</button></td>
+          `;
+          inspectionTable.appendChild(row);
+        });
+
+        // Populate maintenance table
+        const maintenanceTable = document
+          .getElementById("maintenanceTable")
+          .querySelector("tbody");
+        maintenanceTable.innerHTML = ""; // Clear previous records
+        maintenance.forEach((maint, index) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${maint.busId}</td>
+            <td>${maint.type}</td>
+            <td>${maint.date}</td>
+            <td>${maint.notes}</td>
+            <td><button onclick="deleteRecord('maintenance', ${index})">Delete</button></td>
+          `;
+          maintenanceTable.appendChild(row);
+        });
+      }
+
+      // Function to delete a record with verification code
+      function deleteRecord(type, index) {
+        const code = prompt("Enter code to delete record:");
+        if (code === "2004") {
+          if (type === "inspection") {
+            const inspections =
+              JSON.parse(localStorage.getItem("inspections")) || [];
+            inspections.splice(index, 1); // Remove the record
+            localStorage.setItem("inspections", JSON.stringify(inspections)); // Save updated list
+          } else if (type === "maintenance") {
+            const maintenance =
+              JSON.parse(localStorage.getItem("maintenance")) || [];
+            maintenance.splice(index, 1); // Remove the record
+            localStorage.setItem("maintenance", JSON.stringify(maintenance)); // Save updated list
+          }
+          loadRecords(); // Refresh table
+        } else {
+          alert("Incorrect code. Record not deleted.");
+        }
+      }
+
+      // Complete existing code...
+
+// Handle Maintenance Form Submission
+document.getElementById("maintenanceForm").addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const busId = document.getElementById("maintenanceBusId").value;
+    const date = document.getElementById("maintenanceDate").value;
+    const type = document.getElementById("maintenanceType").value;
+    const notes = document.getElementById("maintenanceNotes").value;
+
+    const maintenance = JSON.parse(localStorage.getItem("maintenance")) || [];
+    maintenance.push({ busId, date, type, notes }); // Add new record
+    localStorage.setItem("maintenance", JSON.stringify(maintenance)); // Store updated list
+
+    loadRecords(); // Refresh table
+    document.getElementById("maintenanceForm").reset(); // Clear form
+});
+
+// Initial call to load records on page load
+loadRecords();
+
+
+      // Handle Inspection Form Submission
+      document
+        .getElementById("inspectionForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const busId = document.getElementById("inspectionBusId").value;
+          const date = document.getElementById("inspectionDate").value;
+          const inspector = document.getElementById("inspectorName").value;
+          const type = document.getElementById("inspectionType").value;
+          const notes = document.getElementById("inspectionNotes").value;
+
+          const inspections =
+            JSON.parse(localStorage.getItem("inspections")) || [];
+          inspections.push({ busId, date, inspector, type, notes }); // Add new record
+          localStorage.setItem("inspections", JSON.stringify(inspections)); // Store updated list
+
+          loadRecords(); // Refresh table
+          document.getElementById("inspectionForm").reset(); // Clear form
+        });
+
+      // Function to handle search for both inspections and maintenance
+document
+  .getElementById("searchInspectionForm")
+  .addEventListener("submit", function (event) {
+    event.preventDefault(); // Prevent the default form submission behavior
+
+    const busId = document.getElementById("searchBusId").value.trim();
+    const date = document.getElementById("searchDate").value;
+
+    // Fetch inspections and maintenance from localStorage
+    const inspections = JSON.parse(localStorage.getItem("inspections")) || [];
+    const maintenanceRecords = JSON.parse(localStorage.getItem("maintenance")) || [];
+
+    // Filter inspection records
+    const filteredInspections = inspections.filter((record) => {
+      const matchesBusId = busId ? record.busId === busId : true;
+      const matchesDate = date ? record.date === date : true;
+      return matchesBusId && matchesDate;
+    });
+
+    // Filter maintenance records
+    const filteredMaintenance = maintenanceRecords.filter((record) => {
+      const matchesBusId = busId ? record.busId === busId : true;
+      const matchesDate = date ? record.date === date : true;
+      return matchesBusId && matchesDate;
+    });
+
+    // Display the filtered results
+    displaySearchResults(filteredInspections, filteredMaintenance);
+  });
+
+// Function to display search results
+function displaySearchResults(inspections, maintenance) {
+  const searchResultsTableBody = document
+    .getElementById("searchResultsTable")
+    .querySelector("tbody");
+  searchResultsTableBody.innerHTML = ""; // Clear previous results
+
+  // Display inspections
+  if (inspections.length > 0) {
+    const inspectionHeader = document.createElement("tr");
+    inspectionHeader.innerHTML = `
+      <td colspan="5" style="text-align: center; font-weight: bold; background-color: #e7f3fe;">
+        Inspections
+      </td>`;
+    searchResultsTableBody.appendChild(inspectionHeader);
+
+    inspections.forEach((result) => {
+      const row = document.createElement("tr");
+      row.style.backgroundColor = "#e7f3fe"; // Light blue for inspections
+      row.innerHTML = `
+        <td style="border: 1px solid #ddd; padding: 8px">${result.busId}</td>
+        <td style="border: 1px solid #ddd; padding: 8px">${result.date}</td>
+        <td style="border: 1px solid #ddd; padding: 8px">${result.inspector || "N/A"}</td>
+        <td style="border: 1px solid #ddd; padding: 8px">Inspection</td>
+        <td style="border: 1px solid #ddd; padding: 8px">${result.notes || "N/A"}</td>
+      `;
+      searchResultsTableBody.appendChild(row);
+    });
+  } else {
+    const noInspectionsRow = document.createElement("tr");
+    noInspectionsRow.innerHTML = `
+      <td colspan="5" style="text-align: center;">No inspection results found.</td>`;
+    searchResultsTableBody.appendChild(noInspectionsRow);
+  }
+
+  // Display maintenance records
+  if (maintenance.length > 0) {
+    const maintenanceHeader = document.createElement("tr");
+    maintenanceHeader.innerHTML = `
+      <td colspan="5" style="text-align: center; font-weight: bold; background-color: #f8d7da;">
+        Maintenance
+      </td>`;
+    searchResultsTableBody.appendChild(maintenanceHeader);
+
+    maintenance.forEach((result) => {
+      const row = document.createElement("tr");
+      row.style.backgroundColor = "#f8d7da"; // Light red for maintenance
+      row.innerHTML = `
+        <td style="border: 1px solid #ddd; padding: 8px">${result.busId}</td>
+        <td style="border: 1px solid #ddd; padding: 8px">${result.date}</td>
+        <td style="border: 1px solid #ddd; padding: 8px">${result.maintenanceType || "N/A"}</td>
+        <td style="border: 1px solid #ddd; padding: 8px">Maintenance</td>
+        <td style="border: 1px solid #ddd; padding: 8px">${result.notes || "N/A"}</td>
+      `;
+      searchResultsTableBody.appendChild(row);
+    });
+  } else {
+    const noMaintenanceRow = document.createElement("tr");
+    noMaintenanceRow.innerHTML = `
+      <td colspan="5" style="text-align: center;">No maintenance results found.</td>`;
+    searchResultsTableBody.appendChild(noMaintenanceRow);
+  }
+}
+
+// Sample function to store inspection data (can be triggered when adding new inspections)
+function storeInspectionData(inspection) {
+  const inspections = JSON.parse(localStorage.getItem("inspections")) || [];
+  inspections.push(inspection); // Store the inspection without adding type manually
+  localStorage.setItem("inspections", JSON.stringify(inspections));
+}
+
+// Sample function to store maintenance data (can be triggered when adding new maintenance records)
+function storeMaintenanceData(maintenance) {
+  const maintenanceRecords = JSON.parse(localStorage.getItem("maintenance")) || [];
+  maintenanceRecords.push(maintenance); // Store the maintenance without adding type manually
+  localStorage.setItem("maintenance", JSON.stringify(maintenanceRecords));
+}
+
+    </script>
+  </body>
+</html>

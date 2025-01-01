@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Maintenance Update</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header h1 {
+            margin: 0;
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .form-container input,
+        .form-container textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-container button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        .form-container button:hover {
+            background-color: #218838;
+        }
+        .back-btn {
+            display: inline-block;
+            margin-top: 10px;
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Edit Maintenance Update</h1>
+    </div>
+
+    <div class="form-container">
+        <form id="edit-maintenance-form">
+            <input type="hidden" name="bus_id" id="edit-bus-id-input" value="{{ bus_id }}">
+            <input type="date" name="update_date" id="update-date" required>
+            <input type="text" name="tires" placeholder="Tires (optional)" id="tires">
+            <input type="text" name="brakes" placeholder="Brakes (optional)" id="brakes">
+            <input type="text" name="oil" placeholder="Oil (optional)" id="oil">
+            <input type="text" name="engine" placeholder="Engine (optional)" id="engine">
+            <input type="text" name="lights" placeholder="Lights (optional)" id="lights">
+            <input type="text" name="engine_performance" placeholder="Engine Performance (optional)" id="engine_performance">
+            <input type="text" name="transmission_fluid" placeholder="Transmission Fluid (optional)" id="transmission_fluid">
+            <input type="text" name="battery_charger" placeholder="Battery Charger (optional)" id="battery_charger">
+            <input type="text" name="brake_pads" placeholder="Brake Pads (optional)" id="brake_pads">
+            <textarea name="comments" placeholder="Comments (optional)" rows="4" id="comments"></textarea>
+            <button type="submit">Update</button> 
+        </form>
+        <a href="{{ url_for('admin_dashboard') }}">Back to Dashboard</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const busId = "{{ bus_id }}"; // Get bus ID from context
+            const updateDate = "{{ update_date }}"; // Get update date from context
+
+            // Fetch existing maintenance update details
+            fetch(`/maintenance/${busId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const latestUpdate = data.find(update => update.date === updateDate);
+                    if (latestUpdate) {
+                        document.getElementById('update-date').value = latestUpdate.date;
+                        document.getElementById('tires').value = latestUpdate.tires || '';
+                        document.getElementById('brakes').value = latestUpdate.brakes || '';
+                        document.getElementById('oil').value = latestUpdate.oil || '';
+                        document.getElementById('engine').value = latestUpdate.engine || '';
+                        document.getElementById('lights').value = latestUpdate.lights || '';
+                        document.getElementById('engine_performance').value = latestUpdate.engine_performance || '';
+                        document.getElementById('transmission_fluid').value = latestUpdate.transmission_fluid || '';
+                        document.getElementById('battery_charger').value = latestUpdate.battery_charger || '';
+                        document.getElementById('brake_pads').value = latestUpdate.brake_pads || '';
+                        document.getElementById('comments').value = latestUpdate.comments || '';
+                    }
+                })
+                .catch(error => console.error('Error fetching maintenance data:', error));
+        });
+
+        document.getElementById('edit-maintenance-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+            fetch(`/maintenance/update`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                alert('Maintenance update edited successfully!');
+                window.location.href = "{{ url_for('admin_dashboard') }}"; // Redirect back to manage buses
+            })
+            .catch(error => {
+                console.error('Error updating maintenance:', error);
+                alert('Failed to update maintenance.');
+            });
+        });
+    </script>
+</body>
+
+</html>

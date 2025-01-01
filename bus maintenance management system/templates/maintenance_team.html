@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maintenance Team</title>
+    <style>
+        /* Styling the overall page */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f8ff; /* Light blue background */
+    color: #333;
+}
+
+h1, h2 {
+    color: #003366; /* Dark blue */
+    margin-bottom: 20px;
+    text-align: center; /* Center-aligns h1 and h2 */
+    padding: 20px 0; /* Adds vertical padding */
+}
+
+.container {
+    text-align: center;
+    margin-top: 100px;
+}
+
+.driver-dashboard {
+    width: 80%;
+    margin: 50px auto;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+label {
+    display: block;
+    margin: 15px 0 5px;
+    color: #003366;
+    text-align: left;
+}
+
+select, textarea, input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: #e0f7ff; /* Light blue */
+    color: #003366;
+}
+
+button {
+    background-color: #003366; /* Dark blue */
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+button:hover {
+    background-color: #005b99; /* Lighter blue on hover */
+}
+
+#updateResults {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #e6f2ff; /* Light blue for result section */
+    border-radius: 8px;
+    text-align: left;
+}
+
+#updateResults h3 {
+    color: #003366;
+}
+
+#updateResults p {
+    color: #005b99;
+}
+
+table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.admin-content, .driver-content {
+    margin: 20px;
+}
+
+form {
+    width: 80%;
+    margin: 20px auto;
+    background-color: #f9fbfd; /* Whitish background for form */
+    padding: 20px;
+    border-radius: 8px;
+}
+
+form label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+form input, form select, form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.btn-view, .btn-approve, .btn-reject {
+    padding: 5px 10px;
+    margin-right: 5px;
+}
+
+.btn-view {
+    background-color: #17a2b8;
+}
+
+.btn-approve {
+    background-color: #28a745;
+}
+
+.btn-reject {
+    background-color: #dc3545;
+}
+
+.btn-logout {
+    background-color: #dc3545;
+}
+
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Maintenance Team</h1>
+
+        <form action="{{ url_for('maintenance_team') }}" method="POST">
+            {{ form.csrf_token }}  <!-- CSRF token included -->
+            <input type="hidden" id="bus_id" name="bus_id" value="A"> <!-- Bus A -->
+
+            <label for="tires">Tires Status:</label>
+            <select id="tires" name="tires" required>
+                <option value="Good">Good</option>
+                <option value="Needs Attention">Needs Attention</option>
+            </select>
+
+            <label for="brakes">Brakes Status:</label>
+            <select id="brakes" name="brakes" required>
+                <option value="Good">Good</option>
+                <option value="Needs Attention">Needs Attention</option>
+            </select>
+
+            <label for="oil">Oil Level:</label>
+            <select id="oil" name="oil" required>
+                <option value="Full">Full</option>
+                <option value="Low">Low</option>
+                <option value="Needs Change">Needs Change</option>
+            </select>
+
+            <label for="engine">Engine Status:</label>
+            <select id="engine" name="engine" required>
+                <option value="Running Smoothly">Running Smoothly</option>
+                <option value="Minor Issues">Minor Issues</option>
+                <option value="Needs Repair">Needs Repair</option>
+            </select>
+
+            <label for="lights">Lights Status:</label>
+            <select id="lights" name="lights" required>
+                <option value="Working">Working</option>
+                <option value="Needs Attention">Needs Attention</option>
+            </select>
+
+            <label for="engine_performance">Engine Performance:</label>
+            <select id="engine_performance" name="engine_performance" required>
+                <option value="Good">Good</option>
+                <option value="Needs Attention">Needs Attention</option>
+            </select>
+
+            <label for="transmission_fluid">Transmission Fluid:</label>
+            <select id="transmission_fluid" name="transmission_fluid" required>
+                <option value="Full">Full</option>
+                <option value="Low">Low</option>
+                <option value="Needs Change">Needs Change</option>
+            </select>
+
+            <label for="battery_charger">Battery Charger Test:</label>
+            <select id="battery_charger" name="battery_charger" required>
+                <option value="Working">Working</option>
+                <option value="Needs Repair">Needs Repair</option>
+            </select>
+
+            <label for="brake_pads">Brake Pads Inspection:</label>
+            <select id="brake_pads" name="brake_pads" required>
+                <option value="Good">Good</option>
+                <option value="Worn">Worn</option>
+                <option value="Needs Replacement">Needs Replacement</option>
+            </select>
+
+            <label for="comments">Additional Comments:</label>
+            <textarea id="comments" name="comments" rows="4" placeholder="Any additional notes..."></textarea>
+
+            <button type="submit">Submit Update</button>
+        </form>
+        <a href="{{ url_for('admin_dashboard') }}">Back to Dashboard</a>
+    </div>
+</body>
+
+</html>

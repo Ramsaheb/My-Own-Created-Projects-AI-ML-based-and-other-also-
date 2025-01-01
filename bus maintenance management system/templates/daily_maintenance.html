@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Maintenance Records</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+            margin: 0;
+            color: #333;
+        }
+        .header {
+            background: #007BFF;
+            color: #fff;
+            padding: 10px 20px;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .main-content {
+            margin-top: 60px;
+            padding: 20px;
+        }
+        .card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background: #f4f4f4;
+        }
+        button {
+            background: #007BFF;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Daily Maintenance Records</h1>
+    </div>
+    <div class="main-content">
+        <div class="card">
+            <h2 style="color: #007BFF;">Record Daily Maintenance</h2>
+            <form class="form-group" style="margin-bottom: 20px;">
+                <input type="text" placeholder="Bus ID" required style="width: calc(100% - 22px); padding: 10px; border: 1px solid #ddd; border-radius: 3px;">
+                <input type="date" required style="width: calc(100% - 22px); padding: 10px; border: 1px solid #ddd; border-radius: 3px; margin-top: 10px;">
+                <textarea placeholder="Maintenance Notes" rows="4" required style="width: calc(100% - 22px); padding: 10px; border: 1px solid #ddd; border-radius: 3px; margin-top: 10px;"></textarea>
+                <button type="submit" style="margin-top: 10px;">Submit Daily Maintenance</button>
+            </form>
+
+            <h3 style="color: #007BFF;">Existing Records</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Bus ID</th>
+                        <th>Date</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>2024-09-18</td>
+                        <td>Checked oil levels and tire pressure.</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>2024-09-17</td>
+                        <td>Washed and inspected for damages.</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>2024-09-16</td>
+                        <td>Replaced wiper blades.</td>
+                    </tr>
+                    <!-- Add more records as needed -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

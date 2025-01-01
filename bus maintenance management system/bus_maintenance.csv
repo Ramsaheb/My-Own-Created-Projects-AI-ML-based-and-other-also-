@@ -1,0 +1,22 @@
+Bus,Maintenance Date,Issue,Cost
+Bus 1,2024-01-01,Oil Change,150
+Bus 1,2024-01-05,Tire Replacement,300
+Bus 1,2024-01-10,Brake Inspection,200
+Bus 1,2024-01-15,Engine Check,250
+Bus 1,2024-01-20,Battery Replacement,100
+Bus 2,2024-01-05,Oil Change,180
+Bus 2,2024-01-07,Tire Inspection,75
+Bus 2,2024-01-15,Brake Inspection,100
+Bus 2,2024-01-20,Fluid Check,50
+Bus 3,2024-01-02,Oil Change,160
+Bus 3,2024-01-08,Tire Replacement,400
+Bus 3,2024-01-12,Brake Inspection,90
+Bus 3,2024-01-18,Engine Check,210
+Bus 3,2024-01-25,Battery Replacement,130
+Bus 1,2024-02-01,Air Filter Change,80
+Bus 2,2024-02-03,Oil Change,175
+Bus 2,2024-02-10,Brake Pad Replacement,250
+Bus 3,2024-02-12,Tire Rotation,60
+Bus 1,2024-02-15,Transmission Fluid Change,120
+Bus 3,2024-02-20,Fluid Check,45
+Bus 2,2024-02-25,Engine Check,220
