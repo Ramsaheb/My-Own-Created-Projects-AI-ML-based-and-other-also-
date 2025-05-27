@@ -1,0 +1,16 @@
+[
+  {
+    "title": "Mock article about technology",
+    "description": "This is a mock article describing technology news.",
+    "url": "#",
+    "source": "Mock News",
+    "publishedAt": "2023-01-01T00:00:00Z"
+  },
+  {
+    "title": "Another technology mock article",
+    "description": "More sample content for technology.",
+    "url": "#",
+    "source": "Mock News",
+    "publishedAt": "2023-01-02T00:00:00Z"
+  }
+]
