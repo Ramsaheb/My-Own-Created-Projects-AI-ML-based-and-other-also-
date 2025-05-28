@@ -11,20 +11,7 @@ logger = logging.getLogger(__name__)
 Config.validate()
 
 app = Flask(__name__)
-CORS(app, resources={
-    r"/api/*": {
-        "origins": [
-            "https://f4a135ce-f41c-493c-a2bb-e72585878747-00-2wjins3ibm4nv.sisko.replit.dev:3000",
-            "http://localhost:3000",
-            "http://127.0.0.1:3000"
-        ],
-        "methods": ["GET", "POST", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"],
-        "supports_credentials": True
-    }
-})
-
-
+CORS(app)
 
 @app.route('/')
 def home():
@@ -36,6 +23,8 @@ def home():
         <li>POST /api/analyze (with JSON {"text":"your text"})</li>
     </ul>
     <p>Frontend should be running on http://localhost:3000</p>
+    For running frontend use this command:<br/>
+    <code>PORT=3001 npm run dev</code>
     """
 
 @app.route('/api/articles', methods=['GET'])
@@ -65,11 +54,11 @@ def analyze():
         data = request.get_json()
         text = data.get('text', '')
 
-        if not text:
+        if not text.strip():
             return jsonify({"error": "Text parameter is required"}), 400
 
         logger.info(f"Analyzing sentiment for text: {text[:50]}...")
-        result = analyze_sentiment(text)
+        result = analyze_sentiment({'title': text})  # ✅ Fixed line
         return jsonify({
             "status": "success",
             "data": result
