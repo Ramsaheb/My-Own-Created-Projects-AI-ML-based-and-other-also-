@@ -82,10 +82,6 @@ Project structure of 'media-pulse-dashboard':
 ---
 ## 🧠 AI Feature Explanation
 ✅ Sentiment Analysis
-Sentiment is analyzed using HuggingFace Transformers model: distilbert-base-uncased-finetuned-sst-2-english
-
-Each article is classified as Positive, Neutral, or Negative
-
 Analysis is performed through an authenticated API call using a HuggingFace token
 
 ✅ Article Summarization
