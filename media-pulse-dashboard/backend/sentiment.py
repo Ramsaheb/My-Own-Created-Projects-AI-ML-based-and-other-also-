@@ -1,23 +1,58 @@
 import requests
+import logging
+import re
 from config import Config
 
-def analyze_sentiment(text):
-    if not text.strip():
-        return {"error": "No text provided"}
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+def analyze_sentiment(article):
+    """Enhanced sentiment analysis with better context handling"""
+    if not article.get('title'):
+        return {"error": "Invalid article format"}
+
+    # Preprocess text - combine title and description with cleaning
+    text = f"{article['title']}. {article.get('description', '')}"
+    text = re.sub(r'\s+', ' ', text).strip()
+
+    if not text:
+        return {"sentiment": "neutral", "confidence": 0.0}
 
     try:
-        response = requests.post(
-            Config.API_URL,
-            headers={"Authorization": f"Bearer {Config.HUGGINGFACE_TOKEN}"},
-            json={"inputs": text[:512]}
-        )
-        if response.status_code != 200:
-            return {"error": f"API error {response.status_code}", "details": response.text}
-
-        result = response.json()
-        return {
-            "sentiment": result[0][0]["label"],
-            "confidence": result[0][0]["score"]
+        payload = {
+            "inputs": text[:1000],
+            "parameters": {
+                "return_all_scores": True,
+                "truncation": True
+            }
         }
+
+        headers = {"Authorization": f"Bearer {Config.HUGGINGFACE_TOKEN}"}
+        response = requests.post(
+            "https://api-inference.huggingface.co/models/cardiffnlp/twitter-roberta-base-sentiment",
+            headers=headers,
+            json=payload,
+            timeout=15
+        )
+        response.raise_for_status()
+        result = response.json()
+
+        scores = result[0] if isinstance(result, list) else result
+
+        max_score = max(scores, key=lambda x: x['score'])
+        sentiment = max_score['label'].lower()
+
+        if max_score['score'] < 0.6:
+            return {"sentiment": "neutral", "confidence": max_score['score']}
+
+        return {
+            "sentiment": sentiment,
+            "confidence": max_score['score']
+        }
+
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Sentiment API error: {e}")
+        return {"sentiment": "neutral", "confidence": 0.0}
     except Exception as e:
-        return {"error": str(e)}
+        logger.error(f"Unexpected error: {e}")
+        return {"sentiment": "neutral", "confidence": 0.0}
