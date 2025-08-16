@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake News Detector Extension</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        header img {
+            width: 48px;
+            height: 48px;
+            margin-right: 10px;
+        }
+        h1 {
+            color: #333;
+            margin: 0;
+        }
+        .instructions {
+            background-color: #f0f8ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .instructions h2 {
+            margin-top: 0;
+            color: #0066cc;
+        }
+        .instructions ol {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="icon.png" alt="Fake News Detector Logo">
+            <h1>Fake News Detector</h1>
+        </header>
+        
+        <div class="instructions">
+            <h2>How to Use</h2>
+            <ol>
+                <li><strong>Select text</strong> on any webpage AND <strong>right-click on an image</strong></li>
+                <li>Choose "Detect Fake News" from the context menu</li>
+                <li>View the analysis results in the notification</li>
+            </ol>
+            <p style="color: #d93025; font-weight: bold;">Important: Both text selection AND image are required for analysis to work!</p>
+        </div>
+        
+        <p>This extension helps you identify potentially fake news by analyzing text and images using advanced AI techniques.</p>
+        
+        <p>The extension communicates with a backend API running at <code>http://localhost:8000</code> to perform the analysis.</p>
+        
+        <p><strong>Note:</strong> Make sure the backend server is running before using this extension.</p>
+    </div>
+</body>
+</html>
