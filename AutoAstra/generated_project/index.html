@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro Timer</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <!-- Header with gradient sky background -->
+    <header id="sky" aria-label="Sky gradient background"></header>
+
+    <main>
+        <!-- Pomodoro timer card with glassmorphism effect -->
+        <section class="glass-card" aria-label="Pomodoro timer">
+            <div id="timer-display" role="timer" aria-live="polite">
+                <!-- Circular progress ring -->
+                <svg id="progress-ring" width="200" height="200" aria-hidden="true">
+                    <circle cx="100" cy="100" r="90" stroke="currentColor" stroke-width="10" fill="transparent"></circle>
+                </svg>
+                <!-- Remaining time display -->
+                <span id="time-remaining">25:00</span>
+            </div>
+            <div class="controls">
+                <button id="start-pause" aria-label="Start or pause timer">Start</button>
+                <button id="reset" aria-label="Reset timer">Reset</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Task list panel -->
+    <aside id="task-panel" aria-label="Task list">
+        <h2>Tasks</h2>
+        <input type="text" id="new-task-input" placeholder="New task" aria-label="New task">
+        <ul id="task-list"></ul>
+    </aside>
+
+    <!-- Statistics panel -->
+    <aside id="stats-panel" aria-label="Statistics">
+        <h2>Statistics</h2>
+        <p>Completed Pomodoros: <span id="stat-pomodoros">0</span></p>
+        <p>Total Focus Time: <span id="stat-focus">0</span></p>
+        <p>Total Break Time: <span id="stat-break">0</span></p>
+    </aside>
+
+    <!-- Settings modal (hidden by default) -->
+    <div id="settings-modal" class="modal" role="dialog" aria-modal="true" hidden>
+        <h2>Settings</h2>
+        <form>
+            <label for="focus-duration">Focus Duration (minutes)</label>
+            <input type="number" id="focus-duration" min="1" value="25">
+            <label for="break-duration">Break Duration (minutes)</label>
+            <input type="number" id="break-duration" min="1" value="5">
+            <label for="sound-toggle">
+                <input type="checkbox" id="sound-toggle" checked>
+                Sound
+            </label>
+            <button type="button" id="close-settings">Close</button>
+        </form>
+    </div>
+
+    <!-- Button to open settings modal -->
+    <button id="settings-btn" aria-label="Open settings">Settings</button>
+</body>
+</html>

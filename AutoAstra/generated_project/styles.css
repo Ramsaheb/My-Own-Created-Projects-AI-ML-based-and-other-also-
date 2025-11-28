@@ -1,0 +1,473 @@
+/*
+ * SoftCalc – pastel themed stylesheet (extended)
+ * -------------------------------------------------
+ * This file defines a soft pastel colour palette and applies a clean,
+ * responsive layout for the calculator UI as well as the Pomodoro timer UI.
+ */
+
+/* -------------------------------------------------
+ * 1. Colour palette (CSS variables)
+ * ------------------------------------------------- */
+:root {
+  /* Primary pastel background for the page */
+  --bg-color: #f0f8ff;            /* Alice Blue – very light blue */
+  /* Calculator container background (white with a hint of pink) */
+  --calc-bg: #ffffff;
+  /* Display background */
+  --display-bg: #e6f7ff;          /* Light cyan */
+  /* Base button background */
+  --button-bg: #ffd1dc;          /* Light pink */
+  /* Operator button background – a gentle lavender */
+  --operator-bg: #cfd8ff;        /* Light periwinkle */
+  /* Hover colour for any button */
+  --button-hover: #ffb3c1;       /* Slightly deeper pink */
+  /* Hover colour for operator buttons */
+  --operator-hover: #b3c1ff;     /* Slightly deeper periwinkle */
+  /* Equals button background – soft mint */
+  --equals-bg: #d1ffd6;          /* Light mint */
+  --equals-hover: #b3ffb8;       /* Deeper mint on hover */
+
+  /* -------------------------------------------------
+   * 2. Pomodoro theme colours (time‑of‑day)
+   * ------------------------------------------------- */
+  --sky-morning: #a8e6ff;   /* Light morning blue */
+  --sky-afternoon: #87cefa; /* Soft sky blue */
+  --sky-evening: #ffb6c1;   /* Pinkish sunset */
+  --sky-night: #2c3e50;     /* Dark night */
+
+  /* Ring colours */
+  --ring-bg: rgba(255,255,255,0.2);
+  --ring-progress: #ff6b6b;
+
+  /* Card hue shift for mode transition */
+  --card-hue: 0deg;
+}
+
+/* -------------------------------------------------
+ * 2. Global reset & typography
+ * ------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 100%; /* 1rem = 16px (default) */
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: var(--bg-color);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  padding: 1rem;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* -------------------------------------------------
+ * 3. Full‑screen gradient sky background (using ::before)
+ * ------------------------------------------------- */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    var(--sky-morning),
+    var(--sky-afternoon),
+    var(--sky-evening),
+    var(--sky-night)
+  );
+  background-size: 400% 400%;
+  animation: skyShift 30s ease-in-out infinite;
+  z-index: -1;
+  transition: background 2s ease;
+}
+
+@keyframes skyShift {
+  0%   { background-position: 0% 0%; }
+  25%  { background-position: 0% 100%; }
+  50%  { background-position: 100% 100%; }
+  75%  { background-position: 100% 0%; }
+  100% { background-position: 0% 0%; }
+}
+
+/* -------------------------------------------------
+ * 4. Calculator container (unchanged)
+ * ------------------------------------------------- */
+.calculator {
+  width: 100%;
+  max-width: 360px;               /* Scales with viewport */
+  background-color: var(--calc-bg);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* -------------------------------------------------
+ * 5. Display (unchanged)
+ * ------------------------------------------------- */
+.display {
+  width: 100%;
+  font-size: 2rem;
+  text-align: right;
+  padding: 0.75rem 1rem;
+  background-color: var(--display-bg);
+  border: none;
+  border-radius: 0.75rem;
+  color: #333;
+  outline: none;
+}
+
+/* -------------------------------------------------
+ * 6. Buttons grid layout (unchanged)
+ * ------------------------------------------------- */
+.buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+
+/* -------------------------------------------------
+ * 7. Base button styling – .btn / .button (unchanged)
+ * ------------------------------------------------- */
+.btn,
+.button { /* .button added for script compatibility */
+  font-size: 1.2rem;
+  padding: 0.75rem;
+  background-color: var(--button-bg);
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+  color: #222;
+}
+
+.operator {
+  background-color: var(--operator-bg);
+}
+
+.equals {
+  background-color: var(--equals-bg);
+}
+
+.clear {
+  background-color: #ffecd1; /* Light peach */
+}
+
+.zero {
+  grid-column: span 2;
+}
+
+.btn:hover,
+.button:hover {
+  background: var(--button-hover);
+  transform: translateY(-2px);
+}
+
+.operator:hover {
+  background: var(--operator-hover);
+}
+
+.equals:hover {
+  background: var(--equals-hover);
+}
+
+.clear:hover {
+  background: #ffe5b4; /* Slightly deeper peach */
+}
+
+.btn:active,
+.button:active {
+  transform: translateY(0);
+}
+
+/* -------------------------------------------------
+ * 8. Glass‑morphism Pomodoro card
+ * ------------------------------------------------- */
+.glass-card {
+  position: relative;
+  margin-top: 2rem;
+  width: 280px;
+  padding: 2rem;
+  border-radius: 1.5rem;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  /* hue rotation for mode transition */
+  filter: hue-rotate(var(--card-hue));
+  transition: filter 0.6s ease;
+}
+
+/* -------------------------------------------------
+ * 9. Timer display & progress ring
+ * ------------------------------------------------- */
+#timer-display {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#timer-display svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: rotate(-90deg);
+}
+
+/* Ring background (full circle) */
+.ring-bg {
+  stroke: var(--ring-bg);
+}
+
+/* Ring progress – will be animated via stroke-dashoffset */
+.ring-progress {
+  stroke: var(--ring-progress);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s linear;
+}
+
+#time-remaining {
+  position: relative;
+  font-size: 2.5rem;
+  color: #fff;
+  z-index: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* -------------------------------------------------
+ * 10. Controls inside the card
+ * ------------------------------------------------- */
+.glass-card .controls {
+  display: flex;
+  gap: 1rem;
+}
+
+.glass-card .controls button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  background: rgba(255,255,255,0.25);
+  color: #fff;
+  backdrop-filter: blur(4px);
+  transition: background 0.2s ease;
+}
+
+.glass-card .controls button:hover {
+  background: rgba(255,255,255,0.35);
+}
+
+/* -------------------------------------------------
+ * 11. Side panels (tasks & stats)
+ * ------------------------------------------------- */
+#task-panel,
+#stats-panel {
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 1rem;
+  padding: 1rem;
+  margin: 1rem;
+  width: 260px;
+  max-width: 90%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+#task-panel h2,
+#stats-panel h2 {
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+  color: #fff;
+}
+
+#task-list {
+  list-style: none;
+  margin-top: 0.5rem;
+}
+
+#task-list li {
+  padding: 0.4rem 0;
+  color: #fff;
+}
+
+#new-task-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 0.4rem;
+  background: rgba(255,255,255,0.3);
+  color: #fff;
+}
+
+/* -------------------------------------------------
+ * 12. Modal overlay (settings)
+ * ------------------------------------------------- */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s forwards;
+}
+
+.modal[hidden] {
+  animation: fadeOut 0.3s forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.modal > * {
+  background: var(--calc-bg);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  min-width: 260px;
+}
+
+.modal button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  background: var(--button-bg);
+  border-radius: 0.4rem;
+  cursor: pointer;
+}
+
+.modal button:hover {
+  background: var(--button-hover);
+}
+
+/* -------------------------------------------------
+ * 13. Sound toggle switch styling
+ * ------------------------------------------------- */
+#sound-toggle {
+  appearance: none;
+  width: 40px;
+  height: 20px;
+  background: #ccc;
+  border-radius: 10px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#sound-toggle::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+#sound-toggle:checked {
+  background: #4caf50;
+}
+
+#sound-toggle:checked::before {
+  transform: translateX(20px);
+}
+
+/* -------------------------------------------------
+ * 14. Global button & input styling (general UI)
+ * ------------------------------------------------- */
+button {
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+input, button {
+  outline: none;
+}
+
+/* -------------------------------------------------
+ * 15. Mode transition animations (focus ↔ break)
+ * ------------------------------------------------- */
+@keyframes focusToBreak {
+  0%   { --card-hue: 0deg; }
+  100% { --card-hue: 180deg; }
+}
+
+@keyframes breakToFocus {
+  0%   { --card-hue: 180deg; }
+  100% { --card-hue: 0deg; }
+}
+
+/* Usage example (added via JS):
+   document.querySelector('.glass-card').style.animation = 'focusToBreak 1s forwards'; */
+
+/* -------------------------------------------------
+ * 16. Responsiveness
+ * ------------------------------------------------- */
+@media (min-width: 769px) {
+  main {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 2rem;
+  }
+
+  #task-panel, #stats-panel {
+    margin-top: 4rem;
+  }
+}
+
+@media (max-width: 768px) {
+  main {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #task-panel, #stats-panel {
+    width: 90%;
+  }
+}
+
+/* -------------------------------------------------
+ * 17. Existing calculator responsiveness (unchanged)
+ * ------------------------------------------------- */
+@media (max-width: 400px) {
+  .calculator {
+    padding: 1rem;
+  }
+  .display {
+    font-size: 1.75rem;
+  }
+  .btn,
+  .button {
+    font-size: 1rem;
+    padding: 0.6rem;
+  }
+}
